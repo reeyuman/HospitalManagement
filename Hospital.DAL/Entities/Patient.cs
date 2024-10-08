@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
+
 namespace Hospital.DAL.Entities
 {
+    
     public class Patient : IdentityUser
     {
         [Required(ErrorMessage = "First name is required.")]
