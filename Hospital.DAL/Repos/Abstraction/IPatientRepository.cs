@@ -10,5 +10,7 @@ namespace Hospital.Repository.Abstractions
         void AddPatient(Patient patient);
         void UpdatePatient(Patient patient);
         void DeletePatient(string id);
+
+        void Dispose();
     }
 }

@@ -6,46 +6,46 @@ using System.Collections.Generic;
 
 namespace Hospital.Repository.Implementation
 {
-    public class PatientRepository : IPatientRepository
+    public class DoctorRepository : IDoctorRepository
     {
         private readonly HospitalDbContext _context;
         private bool disposed;
-
-        public PatientRepository(HospitalDbContext context)
+        public DoctorRepository(HospitalDbContext context)
         {
             _context = context;
         }
 
-        public List<Patient> GetAllPatients()
+        public List<Doctor> GetAllDoctors()
         {
-            return _context.Patients.ToList();
+            return _context.Doctors.ToList();
         }
 
-        public Patient GetPatientById(string id)
+        public Doctor GetDoctorById(string id)
         {
-            return _context.Patients.Find(id);
+            return _context.Doctors.Find(id);
         }
 
-        public void AddPatient(Patient patient)
+        public void AddDoctor(Doctor Doctor)
         {
-            _context.Patients.Add(patient);
+            _context.Doctors.Add(Doctor);
             _context.SaveChanges();
         }
 
-        public void UpdatePatient(Patient patient)
+        public void UpdateDoctor(Doctor Doctor)
         {
-            _context.Patients.Update(patient);
+            _context.Doctors.Update(Doctor);
             _context.SaveChanges();
         }
 
-        public void DeletePatient(string id)
+        public void DeleteDoctor(string id)
         {
-            var patient = GetPatientById(id);
-            if (patient != null)
+            var Doctor = GetDoctorById(id);
+            if (Doctor != null)
             {
-                _context.Patients.Remove(patient);
+                _context.Doctors.Remove(Doctor);
                 _context.SaveChanges();
             }
+            
         }
         public void Dispose()
         {

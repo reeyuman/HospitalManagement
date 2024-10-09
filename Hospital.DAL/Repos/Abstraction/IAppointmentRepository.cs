@@ -10,5 +10,6 @@ namespace Hospital.Repository.Abstractions
         void AddAppointment(Appointment appointment);
         void UpdateAppointment(Appointment appointment);
         void DeleteAppointment(int id);
+        void Dispose();
     }
 }

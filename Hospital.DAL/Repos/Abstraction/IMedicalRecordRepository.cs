@@ -10,5 +10,6 @@ namespace Hospital.Repository.Abstractions
         void AddMedicalRecord(MedicalRecord medicalRecord);
         void UpdateMedicalRecord(MedicalRecord medicalRecord);
         void DeleteMedicalRecord(int id);
+        void Dispose();
     }
 }

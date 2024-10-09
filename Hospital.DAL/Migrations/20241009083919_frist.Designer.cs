@@ -4,6 +4,7 @@ using Hospital.DAL.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.DAL.Migrations
 {
     [DbContext(typeof(HospitalDbContext))]
-    partial class HospitalDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241009083919_frist")]
+    partial class frist
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,14 +116,14 @@ namespace Hospital.DAL.Migrations
                     b.Property<DateTime>("AppointmentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DoctorID")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Notes")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("PatientID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("StaffID")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Status")
@@ -130,9 +133,9 @@ namespace Hospital.DAL.Migrations
 
                     b.HasKey("AppointmentID");
 
-                    b.HasIndex("DoctorID");
-
                     b.HasIndex("PatientID");
+
+                    b.HasIndex("StaffID");
 
                     b.ToTable("Appointments");
                 });
@@ -149,14 +152,14 @@ namespace Hospital.DAL.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("DoctorID")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("PatientID")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("RecordDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("StaffID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Treatment")
                         .HasMaxLength(500)
@@ -164,9 +167,9 @@ namespace Hospital.DAL.Migrations
 
                     b.HasKey("MedicalRecordID");
 
-                    b.HasIndex("DoctorID");
-
                     b.HasIndex("PatientID");
+
+                    b.HasIndex("StaffID");
 
                     b.ToTable("MedicalRecords");
                 });
@@ -304,30 +307,6 @@ namespace Hospital.DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Hospital.DAL.Entities.Admin", b =>
-                {
-                    b.HasBaseType("Hospital.DAL.Entities.ApplicationUser");
-
-                    b.Property<decimal>("Salary")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.ToTable("Admins");
-                });
-
-            modelBuilder.Entity("Hospital.DAL.Entities.Doctor", b =>
-                {
-                    b.HasBaseType("Hospital.DAL.Entities.ApplicationUser");
-
-                    b.Property<decimal>("Salary")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Specialization")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.ToTable("Doctors", (string)null);
-                });
-
             modelBuilder.Entity("Hospital.DAL.Entities.Patient", b =>
                 {
                     b.HasBaseType("Hospital.DAL.Entities.ApplicationUser");
@@ -350,34 +329,45 @@ namespace Hospital.DAL.Migrations
                     b.ToTable("Patients", (string)null);
                 });
 
+            modelBuilder.Entity("Hospital.DAL.Entities.Staff", b =>
+                {
+                    b.HasBaseType("Hospital.DAL.Entities.ApplicationUser");
+
+                    b.Property<string>("Specialization")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.ToTable("Staffs", (string)null);
+                });
+
             modelBuilder.Entity("Hospital.DAL.Entities.Appointment", b =>
                 {
-                    b.HasOne("Hospital.DAL.Entities.Doctor", "Doctor")
-                        .WithMany("Appointments")
-                        .HasForeignKey("DoctorID");
-
                     b.HasOne("Hospital.DAL.Entities.Patient", "Patient")
                         .WithMany("Appointments")
                         .HasForeignKey("PatientID");
 
-                    b.Navigation("Doctor");
+                    b.HasOne("Hospital.DAL.Entities.Staff", "Staff")
+                        .WithMany("Appointments")
+                        .HasForeignKey("StaffID");
 
                     b.Navigation("Patient");
+
+                    b.Navigation("Staff");
                 });
 
             modelBuilder.Entity("Hospital.DAL.Entities.MedicalRecord", b =>
                 {
-                    b.HasOne("Hospital.DAL.Entities.Doctor", "Doctor")
-                        .WithMany("MedicalRecords")
-                        .HasForeignKey("DoctorID");
-
                     b.HasOne("Hospital.DAL.Entities.Patient", "Patient")
                         .WithMany("MedicalRecords")
                         .HasForeignKey("PatientID");
 
-                    b.Navigation("Doctor");
+                    b.HasOne("Hospital.DAL.Entities.Staff", "Staff")
+                        .WithMany("MedicalRecords")
+                        .HasForeignKey("StaffID");
 
                     b.Navigation("Patient");
+
+                    b.Navigation("Staff");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -431,24 +421,6 @@ namespace Hospital.DAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Hospital.DAL.Entities.Admin", b =>
-                {
-                    b.HasOne("Hospital.DAL.Entities.ApplicationUser", null)
-                        .WithOne()
-                        .HasForeignKey("Hospital.DAL.Entities.Admin", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Hospital.DAL.Entities.Doctor", b =>
-                {
-                    b.HasOne("Hospital.DAL.Entities.ApplicationUser", null)
-                        .WithOne()
-                        .HasForeignKey("Hospital.DAL.Entities.Doctor", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Hospital.DAL.Entities.Patient", b =>
                 {
                     b.HasOne("Hospital.DAL.Entities.ApplicationUser", null)
@@ -458,14 +430,23 @@ namespace Hospital.DAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Hospital.DAL.Entities.Doctor", b =>
+            modelBuilder.Entity("Hospital.DAL.Entities.Staff", b =>
+                {
+                    b.HasOne("Hospital.DAL.Entities.ApplicationUser", null)
+                        .WithOne()
+                        .HasForeignKey("Hospital.DAL.Entities.Staff", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Hospital.DAL.Entities.Patient", b =>
                 {
                     b.Navigation("Appointments");
 
                     b.Navigation("MedicalRecords");
                 });
 
-            modelBuilder.Entity("Hospital.DAL.Entities.Patient", b =>
+            modelBuilder.Entity("Hospital.DAL.Entities.Staff", b =>
                 {
                     b.Navigation("Appointments");
 

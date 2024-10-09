@@ -29,13 +29,10 @@ namespace Hospital.PL
         options.AccessDeniedPath = new PathString("/Account/Login");
     });
 
-            builder.Services.AddIdentityCore<Patient>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<HospitalDbContext>()
-                .AddTokenProvider<DataProtectorTokenProvider<Patient>>(TokenOptions.DefaultProvider);
 
-            builder.Services.AddIdentityCore<Staff>(options => options.SignIn.RequireConfirmedAccount = true)
-              .AddEntityFrameworkStores<HospitalDbContext>()
-              .AddTokenProvider<DataProtectorTokenProvider<Staff>>(TokenOptions.DefaultProvider);
+            builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<HospitalDbContext>()
+                .AddDefaultTokenProviders();
 
 
             var app = builder.Build();

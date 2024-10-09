@@ -18,16 +18,16 @@ namespace Hospital.DAL.Entities
         [Required(ErrorMessage = "Record date is required.")]
         public DateTime RecordDate { get; set; }
 
-        [Required(ErrorMessage = "Patient ID is required.")]
+        
         [ForeignKey("Patient")]
-        public string PatientID { get; set; }
+        public string? PatientID { get; set; }
 
         public Patient? Patient { get; set; }
 
-        [Required(ErrorMessage = "Staff ID is required.")]
-        [ForeignKey("Staff")]
-        public string StaffID { get; set; }
+        
+        [ForeignKey("Doctor")]
+        public string? DoctorID { get; set; }
 
-        public Staff? Staff { get; set; }
+        public Doctor? Doctor { get; set; }
     }
 }

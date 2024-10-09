@@ -10,6 +10,7 @@ namespace Hospital.Repository.Implementation
     {
         private readonly HospitalDbContext _context;
 
+        private bool disposed;
         public AppointmentRepository(HospitalDbContext context)
         {
             _context = context;
@@ -17,12 +18,12 @@ namespace Hospital.Repository.Implementation
 
         public List<Appointment> GetAllAppointments()
         {
-            return _context.Appointments.Include(a => a.Patient).Include(a => a.Staff).ToList();
+            return _context.Appointments.Include(a => a.Patient).Include(a => a.Doctor).ToList();
         }
 
         public Appointment GetAppointmentById(int id)
         {
-            return _context.Appointments.Include(a => a.Patient).Include(a => a.Staff)
+            return _context.Appointments.Include(a => a.Patient).Include(a => a.Doctor)
                                          .FirstOrDefault(a => a.AppointmentID == id);
         }
 
@@ -51,6 +52,25 @@ namespace Hospital.Repository.Implementation
         List<Appointment> IAppointmentRepository.GetAllAppointments()
         {
             throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+            if (disposing)
+            {
+                _context.Dispose();
+            }
+
+            disposed = true;
         }
     }
 }

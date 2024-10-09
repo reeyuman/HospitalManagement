@@ -9,7 +9,7 @@ namespace Hospital.Repository.Implementation
     public class MedicalRecordRepository : IMedicalRecordRepository
     {
         private readonly HospitalDbContext _context;
-
+        private bool disposed;
         public MedicalRecordRepository(HospitalDbContext context)
         {
             _context = context;
@@ -17,12 +17,12 @@ namespace Hospital.Repository.Implementation
 
         public List<MedicalRecord> GetAllMedicalRecords()
         {
-            return _context.MedicalRecords.Include(m => m.Patient).Include(m => m.Staff).ToList();
+            return _context.MedicalRecords.Include(m => m.Patient).Include(m => m.Doctor).ToList();
         }
 
         public MedicalRecord GetMedicalRecordById(int id)
         {
-            return _context.MedicalRecords.Include(m => m.Patient).Include(m => m.Staff)
+            return _context.MedicalRecords.Include(m => m.Patient).Include(m => m.Doctor)
                                            .FirstOrDefault(m => m.MedicalRecordID == id);
         }
 
@@ -46,6 +46,25 @@ namespace Hospital.Repository.Implementation
                 _context.MedicalRecords.Remove(medicalRecord);
                 _context.SaveChanges();
             }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+            if (disposing)
+            {
+                _context.Dispose();
+            }
+
+            disposed = true;
         }
     }
 }
