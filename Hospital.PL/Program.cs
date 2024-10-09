@@ -1,5 +1,10 @@
+using Hospital.BLL.Abstraction;
+using Hospital.BLL.Implementation;
+using Hospital.BLL.Options;
 using Hospital.DAL.DataBase;
 using Hospital.DAL.Entities;
+using Hospital.Repository.Abstractions;
+using Hospital.Repository.Implementation;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +17,22 @@ namespace Hospital.PL
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            
+            builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("EmailOptions"));
+
+            builder.Services.AddScoped<IEmailSender,EmailSender>();
+            builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+            builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            builder.Services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
+            builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
+
+
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             // Enhancement ConnectionString
             var connectionString = builder.Configuration.GetConnectionString("defaultConnection");
+
 
             builder.Services.AddDbContext<HospitalDbContext>(options =>
             options.UseSqlServer(connectionString));
@@ -49,7 +66,7 @@ namespace Hospital.PL
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
